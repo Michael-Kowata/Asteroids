@@ -8,11 +8,12 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
+from logger import log_event, log_state
 
 def main():
     print(pygame.version.ver)
     pygame.init()
-    print("Starting asteroids!")
+    print("Starting Asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -35,6 +36,7 @@ def main():
     asteroidfield = AsteroidField()
 
     while True:
+        log_event("frame_update")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
@@ -48,11 +50,13 @@ def main():
         
         for asteroid in asteroids:                
             if asteroid.collision_check(player):
+                log_event("player_hit")
                 print("Game Over")
                 sys.exit()
             
             for shot in shots:
                 if asteroid.collision_check(shot):
+                    log_event("asteroid_shot")
                     asteroid.split()
                     shot.kill()
 
